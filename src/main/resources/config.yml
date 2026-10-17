@@ -1,0 +1,107 @@
+# ============ Boombox ============
+# После изменения конфига: /boombox reload
+
+item:
+  # Базовый предмет, на который вешается модель. Должен быть плоским (как бумага).
+  # Лучше брать предмет, который не трогают другие ресурспаки.
+  material: PAPER
+  # Для палок/инструментов можно поставить "minecraft:item/handheld"
+  model-parent: "minecraft:item/generated"
+  custom-model-data: 7001
+  name: "<gold><bold>Бумбокс"
+  lore:
+    - "<gray>ПКМ по верху блока — поставить"
+    - "<gray>ПКМ по бумбоксу — меню музыки"
+    - "<gray>Shift+ПКМ — забрать (владелец)"
+
+model:
+  scale: 0.6            # размер модели в мире (1.0 = 16 пикселей = 1 блок)
+  yaw-offset: 0         # если бумбокс стоит "задом" — поставь 180
+  rotation-step: 45     # поворот привязывается к этим градусам
+  hitbox-width: 0.6     # область клика (ширина/глубина)
+  hitbox-height: 0.5    # область клика (высота)
+
+music:
+  radius: 24            # на каком расстоянии слышно музыку (в блоках)
+  default-volume: 100   # громкость по умолчанию, %
+  default-repeat: OFF   # OFF / ONE / ALL (ALL = по кругу весь список)
+  default-track-seconds: 180   # если длину .ogg определить не удалось
+  max-download-mb: 50   # лимит размера файла для /boombox add
+
+# mp3/wav/flac/m4a автоматически конвертируются в .ogg через ffmpeg (если он есть на хосте)
+ffmpeg:
+  enabled: true
+  path: "ffmpeg"
+  mono: true            # моно = звук затухает с расстоянием (стерео играет ровно)
+
+resource-pack:
+  send-on-join: true
+  join-delay-ticks: 40
+  resend-on-change: true      # отправлять игрокам заново, когда добавили/удалили трек
+  require-loaded: true        # включать музыку только игрокам, у которых ресурспак уже загружен
+  required: false
+  prompt: "<yellow>Ресурспак с музыкой и моделью бумбокса"
+  description: "Boombox"
+  pack-format: 34             # 34 = Minecraft 1.21 / 1.21.1
+
+  # ВАРИАНТ А (по умолчанию): плагин сам раздаёт ресурспак по HTTP.
+  # Нужен свободный порт на машине с Paper и публичный адрес:
+  server:
+    enabled: true
+    port: 8123
+    public-url: ""            # пример: "http://123.45.67.89:8123"
+
+  # ВАРИАНТ Б: если порт открыть нельзя — залей plugins/Boombox/pack/boombox-pack.zip
+  # на любой хостинг с ПРЯМОЙ ссылкой и вставь её сюда. Тогда встроенный сервер не нужен.
+  # После каждого изменения треков zip нужно перезаливать.
+  external-url: ""
+
+messages:
+  prefix: "<dark_gray>[<gold>Boombox<dark_gray>] <reset>"
+  no-permission: "{prefix}<red>Нет прав."
+  player-not-found: "{prefix}<red>Игрок не найден."
+  players-only: "{prefix}<red>Только для игроков."
+  given: "{prefix}<green>Бумбокс выдан игроку <white>{player}<green>."
+  need-top: "{prefix}<red>Ставь бумбокс на верхнюю грань блока."
+  cannot-place: "{prefix}<red>Сюда поставить нельзя."
+  placed: "{prefix}<green>Бумбокс поставлен. ПКМ — меню музыки."
+  not-owner: "{prefix}<red>Это чужой бумбокс."
+  picked-up: "{prefix}<green>Бумбокс забран."
+  pack-sent: "{prefix}<green>Ресурспак отправлен."
+  pack-not-ready: "{prefix}<red>Ресурспак ещё не готов или не настроен адрес (resource-pack.server.public-url)."
+  tracks-empty: "{prefix}<yellow>Треков нет. Положи .ogg в plugins/Boombox/music или используй /boombox add."
+  tracks-header: "{prefix}<green>Треков: <white>{count}"
+  track-line: "<gray> - <white>{name} <dark_gray>[{id}] <gray>{time}"
+  track-unknown: "{prefix}<red>Трек <white>{id}<red> не найден."
+  usage-add: "{prefix}<yellow>/boombox add ссылка [название]"
+  usage-remove: "{prefix}<yellow>/boombox remove id"
+  add-started: "{prefix}<yellow>Скачиваю и собираю ресурспак..."
+  add-done: "{prefix}<green>Трек добавлен: <white>{name} <dark_gray>[{id}]"
+  add-failed: "{prefix}<red>Не удалось: <white>{error}"
+  removed: "{prefix}<green>Трек <white>{id}<green> удалён."
+  reloaded: "{prefix}<green>Конфиг, треки и ресурспак перезагружены."
+  help-1: "{prefix}<gold>Boombox <gray>— команды:"
+  help-2: "<yellow>/boombox list <gray>— список треков"
+  help-3: "<yellow>/boombox pack <gray>— получить ресурспак ещё раз"
+  help-4: "<yellow>/boombox give [игрок] <gray>— выдать бумбокс"
+  help-5: "<yellow>/boombox add ссылка [название] <gray>— загрузить трек"
+  help-6: "<yellow>/boombox remove id <gray>— удалить трек"
+  help-7: "<yellow>/boombox reload <gray>— перезагрузить"
+  gui-title: "<dark_gray>Бумбокс"
+  gui-prev: "<yellow>← Назад"
+  gui-next: "<yellow>Вперёд →"
+  gui-stop: "<red>■ Стоп"
+  gui-vol-down: "<red>Тише <gray>(-10%)"
+  gui-vol-up: "<green>Громче <gray>(+10%)"
+  gui-volume: "<gray>Громкость: <white>{volume}%"
+  gui-repeat-off: "<gray>Повтор: <white>выкл"
+  gui-repeat-one: "<gray>Повтор: <green>один трек"
+  gui-repeat-all: "<gray>Повтор: <green>весь список"
+  gui-pickup: "<gold>Забрать бумбокс"
+  gui-now: "<green>▶ Сейчас играет: <white>{name}"
+  gui-idle: "<gray>Ничего не играет"
+  gui-track-time: "<gray>Длительность: <white>{time}"
+  gui-track-click: "<yellow>Нажми, чтобы включить"
+  gui-track-active: "<green>Играет сейчас"
+  gui-empty: "<red>Нет треков"
+  gui-empty-lore: "<gray>Положи .ogg в plugins/Boombox/music"

@@ -1,0 +1,25 @@
+name: Boombox
+version: 1.0.0
+main: dev.boombox.BoomboxPlugin
+api-version: '1.21'
+description: Бумбокс с кастомной моделью и музыкой из ресурспака
+commands:
+  boombox:
+    description: Управление бумбоксами
+    aliases: [bb]
+    usage: /boombox help
+permissions:
+  boombox.use:
+    description: Открывать меню бумбокса
+    default: true
+  boombox.place:
+    description: Ставить бумбокс
+    default: true
+  boombox.upload:
+    description: Добавлять и удалять треки
+    default: op
+  boombox.admin:
+    description: Выдавать бумбоксы, перезагружать плагин, забирать чужие бумбоксы
+    default: op
+    children:
+      boombox.upload: true
